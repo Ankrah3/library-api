@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  # --- Your existing DB services from Week 4 ---
+  postgres_db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    # ... (your existing config)
+
+  mysql_db:
+    image: mysql:8.0
+    container_name: mysql_db
+    # ... (your existing config)
+
+  oracle_db:
+    image: container-registry.oracle.com/database/free:latest
+    container_name: oracle_db
+    # ... (your existing config)
+
+  mongo_db:
+    image: mongo:6.0
+    container_name: mongo_db
+    # ... (your existing config)
+
+  # --- The new API service must be indented here under 'services:' ---
+  api:
+    build: .
+    container_name: library_api
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres_db
+      - mysql_db
+      - oracle_db
+      - mongo_db
+    networks:
+      - dbnet
+
+networks:
+  dbnet:
+    driver: bridge
