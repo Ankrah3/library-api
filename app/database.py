@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.config import settings
 
+
 # Postgres
 pg_engine = create_engine(settings.postgres_url)
 PgSession = sessionmaker(bind=pg_engine)

@@ -1,28 +1,63 @@
-version: "3.8"
-
 services:
-  # --- Your existing DB services from Week 4 ---
   postgres_db:
     image: postgres:15-alpine
     container_name: postgres_db
-    # ... (your existing config)
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app_admin
+      POSTGRES_PASSWORD: StrongPass1!
+      POSTGRES_DB: library_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - dbnet
 
   mysql_db:
     image: mysql:8.0
     container_name: mysql_db
-    # ... (your existing config)
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: StrongPass1!
+      MYSQL_DATABASE: library_db
+      MYSQL_USER: app_admin
+      MYSQL_PASSWORD: StrongPass2!
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+    networks:
+      - dbnet
 
   oracle_db:
     image: container-registry.oracle.com/database/free:latest
     container_name: oracle_db
-    # ... (your existing config)
+    restart: unless-stopped
+    environment:
+      ORACLE_PWD: StrongPass1!
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracledata:/opt/oracle/oradata
+    networks:
+      - dbnet
 
   mongo_db:
     image: mongo:6.0
     container_name: mongo_db
-    # ... (your existing config)
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: app_admin
+      MONGO_INITDB_ROOT_PASSWORD: StrongPass1!
+      MONGO_INITDB_DATABASE: library_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+    networks:
+      - dbnet
 
-  # --- The new API service must be indented here under 'services:' ---
   api:
     build: .
     container_name: library_api
@@ -38,6 +73,12 @@ services:
       - mongo_db
     networks:
       - dbnet
+
+volumes:
+  pgdata:
+  mysqldata:
+  oracledata:
+  mongodata:
 
 networks:
   dbnet:
