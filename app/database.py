@@ -8,7 +8,10 @@ pg_engine = create_engine(settings.postgres_url)
 PgSession = sessionmaker(bind=pg_engine)
 
 # MySQL
-mysql_engine = create_engine(settings.mysql_url)
+mysql_engine = create_engine(
+    settings.mysql_url,
+    connect_args={"ssl": {"ssl_mode": "REQUIRED"}}
+)
 MysqlSession = sessionmaker(bind=mysql_engine)
 
 # Oracle
