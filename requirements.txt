@@ -7,3 +7,4 @@ oracledb
 pymongo
 pydantic-settings
 email-validator
+certifi

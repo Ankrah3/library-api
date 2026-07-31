@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     postgres_url: str
@@ -6,7 +6,9 @@ class Settings(BaseSettings):
     oracle_url: str
     mongo_url: str
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore"  # <--- Allows extra env vars like MONGO_URI without crashing
+    )
 
 settings = Settings()

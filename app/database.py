@@ -1,7 +1,8 @@
+import certifi
+from pymongo import MongoClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.config import settings
-
 
 # Postgres
 pg_engine = create_engine(settings.postgres_url)
@@ -18,6 +19,17 @@ MysqlSession = sessionmaker(bind=mysql_engine)
 oracle_engine = create_engine(settings.oracle_url)
 OracleSession = sessionmaker(bind=oracle_engine)
 
+# MongoDB (with SSL CA fix for Docker)
+mongo_client = MongoClient(
+    settings.mongo_url,
+    tlsCAFile=certifi.where(),
+    tlsAllowInvalidCertificates=True  # Temporary test flag
+)
+
+mongo_db = mongo_client.get_default_database()
+
+
+
 def get_pg_db():
     db = PgSession()
     try:
@@ -25,12 +37,14 @@ def get_pg_db():
     finally:
         db.close()
 
+
 def get_mysql_db():
     db = MysqlSession()
     try:
         yield db
     finally:
         db.close()
+
 
 def get_oracle_db():
     db = OracleSession()
