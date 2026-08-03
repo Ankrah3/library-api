@@ -28,5 +28,5 @@ for engine, db_name in [
     try:
         Base.metadata.create_all(bind=engine)
         print(f"Successfully initialized {db_name} tables.")
-    except OperationalError as e:
+except Exception as e:
         print(f"Skipping {db_name} initialization for now (not ready yet): {e}")
