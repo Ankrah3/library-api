@@ -2,7 +2,7 @@
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 FILENAME="backup_postgres_${TIMESTAMP}.dump"
 
-PGPASSWORD="${POSTGRES_PASSWORD}" pg_dump \
+PGPASSWORD="${POSTGRES_PASSWORD}" /usr/lib/postgresql/17/bin/pg_dump \
   -h "${POSTGRES_HOST}" \
   -p "${POSTGRES_PORT}" \
   -U "${POSTGRES_USER}" \
