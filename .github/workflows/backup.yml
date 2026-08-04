@@ -1,4 +1,4 @@
-name: Automated Database Backup
+gname: Automated Database Backup
 
 on:
   schedule:
@@ -20,6 +20,12 @@ jobs:
           echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
           sudo apt-get update
           sudo apt-get install -y postgresql-client-17 default-mysql-client
+
+- name: Debug - find pg_dump
+        run: |
+          which pg_dump || echo "pg_dump not on PATH"
+          find / -name "pg_dump*" 2>/dev/null
+
 
       - name: Make scripts executable
         run: chmod +x scripts/backup_postgres.sh scripts/backup_mysql.sh
