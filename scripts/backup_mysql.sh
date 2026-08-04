@@ -3,10 +3,10 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 FILENAME="backup_mysql_${TIMESTAMP}.sql"
 
 mysqldump \
-  -h library-api-mysql-ankrahd75-8ebf.f.aivencloud.com \
-  -P 16835 \
-  -u avnadmin \
-  -p"$MYSQL_PWD"\
+  -h "${MYSQL_HOST}" \
+  -P "${MYSQL_PORT}" \
+  -u "${MYSQL_USER}" \
+  -p"${MYSQL_PASSWORD}" \
   --ssl-mode=REQUIRED \
   --set-gtid-purged=OFF \
   --single-transaction \

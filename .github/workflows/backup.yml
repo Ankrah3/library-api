@@ -1,0 +1,46 @@
+name: Automated Database Backup
+
+on:
+  schedule:
+    - cron: '0 2 * * *'   # runs daily at 2 AM UTC
+  workflow_dispatch:        # allows manual trigger from the Actions tab
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL and MySQL clients
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client default-mysql-client
+
+      - name: Make scripts executable
+        run: chmod +x scripts/backup_postgres.sh scripts/backup_mysql.sh
+
+      - name: Backup PostgreSQL
+        env:
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+        run: ./scripts/backup_postgres.sh
+
+      - name: Backup MySQL
+        env:
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+        run: ./scripts/backup_mysql.sh
+
+      - name: Upload backups as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: db-backups-${{ github.run_number }}
+          path: |
+            backup_postgres_*.dump
+            backup_mysql_*.sql
+          retention-days: 30

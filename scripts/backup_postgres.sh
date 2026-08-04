@@ -2,10 +2,10 @@
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 FILENAME="backup_postgres_${TIMESTAMP}.dump"
 
-PGPASSWORD='DavidAnkrah123' pg_dump \
-  -h aws-1-eu-west-2.pooler.supabase.com \
-  -p 6543 \
-  -U postgres.qvocgbvyjauemxdftdst \
+PGPASSWORD="${POSTGRES_PASSWORD}" pg_dump \
+  -h "${POSTGRES_HOST}" \
+  -p "${POSTGRES_PORT}" \
+  -U "${POSTGRES_USER}" \
   -d postgres \
   -n public \
   -F c \
