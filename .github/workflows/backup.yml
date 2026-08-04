@@ -1,9 +1,9 @@
-gname: Automated Database Backup
+name: Automated Database Backup
 
 on:
   schedule:
-    - cron: '0 2 * * *'   # runs daily at 2 AM UTC
-  workflow_dispatch:        # allows manual trigger from the Actions tab
+    - cron: '0 2 * * *'
+  workflow_dispatch:
 
 jobs:
   backup:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-- name: Install PostgreSQL and MySQL clients
+      - name: Install PostgreSQL and MySQL clients
         run: |
           sudo apt-get update
           sudo apt-get install -y curl gnupg lsb-release
@@ -20,12 +20,6 @@ jobs:
           echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
           sudo apt-get update
           sudo apt-get install -y postgresql-client-17 default-mysql-client
-
-- name: Debug - find pg_dump
-        run: |
-          which pg_dump || echo "pg_dump not on PATH"
-          find / -name "pg_dump*" 2>/dev/null
-
 
       - name: Make scripts executable
         run: chmod +x scripts/backup_postgres.sh scripts/backup_mysql.sh
