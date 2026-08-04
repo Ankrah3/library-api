@@ -12,10 +12,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install PostgreSQL and MySQL clients
+- name: Install PostgreSQL and MySQL clients
         run: |
           sudo apt-get update
-          sudo apt-get install -y postgresql-client default-mysql-client
+          sudo apt-get install -y curl gnupg lsb-release
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
+          echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-17 default-mysql-client
 
       - name: Make scripts executable
         run: chmod +x scripts/backup_postgres.sh scripts/backup_mysql.sh
